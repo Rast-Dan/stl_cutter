@@ -42,21 +42,9 @@ public class Triangle {
             volumePoints.add(intersection);
         }
         if(volumePoints.size() == 3) {
-            for(Line line : getLines()) {
-                if(line.isOnPlane(plane)) {
-                    lines.add(line);
-                    continue;
-                }
-                VolumePoint intersection = line.intersect(plane);
-                if(intersection == null)
-                    continue;
-                volumePoints.add(intersection);
-            }
             throw new RuntimeException("Некорректное количество точек перечения");
         }
         List<VolumePoint> volumePointList = volumePoints.stream().toList();
-        if(volumePoints.size() == 1)
-            lines.add(new Line(volumePointList.get(0), volumePointList.get(0)));
         if(volumePoints.size() == 2)
             lines.add(new Line(volumePointList.get(0), volumePointList.get(1)));
         return lines;

@@ -39,6 +39,8 @@ public class Solid {
         }
         Set<Line> wasVisited = new TreeSet<>();
         for(Line currLine : all) {
+            if(currLine.getFrom().equals(currLine.getTo()))
+                continue;
             if(wasVisited.contains(currLine))
                 continue;
             wasVisited.add(currLine);

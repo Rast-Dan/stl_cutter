@@ -4,8 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -142,7 +141,16 @@ public class ShapeDrawer {
                 }
             }
     }
-
+    private void toFile(PlaneShape planeShape) {
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("res.txt", true));
+            writer.write(planeShape.toString() + "\n");
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private BufferedImage toBufferedImage() {
         BufferedImage image = new BufferedImage(MAX + 2 * OFFSET, MAX + 2 * OFFSET, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();  // not sure on this line, but this seems more right
@@ -157,19 +165,25 @@ public class ShapeDrawer {
         lines.add(new PlaneShape.Line(basePoint, basePoint));
         PlaneShape baseShape = new PlaneShape(lines);
         shapes.add(baseShape);
-        for(PlaneShape shape : shapes)
-            for(PlaneShape.Line line : shape.getLines()) {
-                for(PlaneShape.PlanePoint planePoint : line.getPoints()) {
-                    if(maxX == null || planePoint.getX() > maxX)
+        int numberLines = 0;
+        for(PlaneShape shape : shapes) {
+            if(shape.getLines().size() > 1)
+                toFile(shape);
+            for (PlaneShape.Line line : shape.getLines()) {
+                numberLines++;
+                for (PlaneShape.PlanePoint planePoint : line.getPoints()) {
+                    if (maxX == null || planePoint.getX() > maxX)
                         maxX = planePoint.getX();
-                    if(minX == null || planePoint.getX() < minX)
+                    if (minX == null || planePoint.getX() < minX)
                         minX = planePoint.getX();
-                    if(maxY == null || planePoint.getY() > maxY)
+                    if (maxY == null || planePoint.getY() > maxY)
                         maxY = planePoint.getY();
-                    if(minY == null || planePoint.getY() < minY)
+                    if (minY == null || planePoint.getY() < minY)
                         minY = planePoint.getY();
                 }
             }
+        }
+        System.out.println(numberLines - 1);
         Double xMul = 1. / (maxX - minX);
         Double yMul = 1. / (maxY - minY);
         Double mul = Math.min(xMul, yMul) * MAX;

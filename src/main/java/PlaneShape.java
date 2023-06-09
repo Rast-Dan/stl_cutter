@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlaneShape {
     public static class PlanePoint {
@@ -26,6 +27,11 @@ public class PlaneShape {
         public PlanePoint getNormalized(Double xMin, Double yMin, Double mul) {
             return new PlanePoint((getX() - xMin) * mul, (getY() - yMin) * mul, original);
         }
+
+        @Override
+        public String toString() {
+            return String.format("%.3f", x) + "," + String.format("%.3f", y);
+        }
     }
     public static class Line {
         PlanePoint from;
@@ -50,6 +56,11 @@ public class PlaneShape {
             this.from = from;
             this.to = to;
         }
+
+        @Override
+        public String toString() {
+            return getPoints().stream().map(PlanePoint::toString).collect(Collectors.joining(","));
+        }
     }
     List<PlaneShape.Line> lines;
 
@@ -69,5 +80,10 @@ public class PlaneShape {
             lines.add(new Line(newFrom, newTo));
         }
         return new PlaneShape(lines);
+    }
+
+    @Override
+    public String toString() {
+        return getLines().stream().map(Line::toString).collect(Collectors.joining("; "));
     }
 }
