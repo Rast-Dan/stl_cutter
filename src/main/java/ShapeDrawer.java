@@ -234,8 +234,13 @@ public class ShapeDrawer {
         panel.setLayout(null);
         JLabel label = new JLabel(icon);
         panel.add(label);
+        JTextPane headerPane = new JTextPane();
+        headerPane.setBounds(COUNT + 5, 10, 225, 20);
+        headerPane.setEditable(false);
+        panel.add(headerPane);
+        headerPane.setText("Координаты точки (x; y; z):");
         JTextPane textPane = new JTextPane();
-        textPane.setBounds(COUNT + 5, 10, 225, 20);
+        textPane.setBounds(COUNT + 5, 32, 225, 20);
         textPane.setEditable(false);
         panel.add(textPane);
         frame.setSize(COUNT + 250,COUNT + 50);
