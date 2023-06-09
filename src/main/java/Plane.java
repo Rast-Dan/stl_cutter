@@ -1,29 +1,29 @@
 public class Plane {
-    private final Point point;
+    private final VolumePoint volumePoint;
     private final Vector normal;
 
-    public Point getPoint() {
-        return point;
+    public VolumePoint getPoint() {
+        return volumePoint;
     }
 
     public Vector getNormal() {
         return normal;
     }
 
-    public Plane(Point point, Vector normal) {
-        this.point = point;
+    public Plane(VolumePoint volumePoint, Vector normal) {
+        this.volumePoint = volumePoint;
         this.normal = normal.getNormalized();
     }
 
-    public Point getPlanedPoint(Point point) {
-        Vector fromPointToOrig = new Vector(point, this.getPoint());
+    public VolumePoint getPlanedPoint(VolumePoint volumePoint) {
+        Vector fromPointToOrig = new Vector(volumePoint, this.getPoint());
         Double fromOnPlane = fromPointToOrig.scalar(this.getNormal());
         Vector offset = this.getNormal().mul(fromOnPlane);
-        return offset.fromPoint(point);
+        return offset.fromPoint(volumePoint);
     }
 
-    public Point getRandomPoint() {
-        return getPlanedPoint(Point.getRandom());
+    public VolumePoint getRandomPoint() {
+        return getPlanedPoint(VolumePoint.getRandom());
     }
 
     public Vector getRandomVector() {

@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Line implements Comparable<Line> {
-    private Point from;
+    private VolumePoint from;
     private Vector vector;
 
-    public Point getFrom() {
+    public VolumePoint getFrom() {
         return from;
     }
 
@@ -13,36 +13,36 @@ public class Line implements Comparable<Line> {
         return vector;
     }
 
-    public List<Point> getPoints() {
-        List<Point> result = new ArrayList<>();
+    public List<VolumePoint> getPoints() {
+        List<VolumePoint> result = new ArrayList<>();
         result.add(getFrom());
         result.add(getTo());
         return result;
     }
 
-    public Line(Point from, Vector vector) {
+    public Line(VolumePoint from, Vector vector) {
         this.from = from;
         this.vector = vector;
     }
 
-    public Line(Point from, Point to) {
+    public Line(VolumePoint from, VolumePoint to) {
         this(from, new Vector(from, to));
     }
 
-    public Point intersect(Plane plane) {
-        Point planePoint = plane.getRandomPoint();
-        Vector fromAndPoint = new Vector(getFrom(), planePoint);
-        Vector toAndPoint = new Vector(planePoint, getTo());
+    public VolumePoint intersect(Plane plane) {
+        VolumePoint planeVolumePoint = plane.getRandomPoint();
+        Vector fromAndPoint = new Vector(getFrom(), planeVolumePoint);
+        Vector toAndPoint = new Vector(planeVolumePoint, getTo());
         Double fromOnPlane = fromAndPoint.scalar(plane.getNormal());
         Double toOnPlane = toAndPoint.scalar(plane.getNormal());
-        if(Math.abs(fromOnPlane) < Point.getE())
+        if(Math.abs(fromOnPlane) < VolumePoint.getE())
             return getFrom();
-        if(Math.abs(toOnPlane) < Point.getE())
+        if(Math.abs(toOnPlane) < VolumePoint.getE())
             return getTo();
-        if((fromOnPlane < -Point.getE()) ^ (toOnPlane < -Point.getE()))
+        if((fromOnPlane < -VolumePoint.getE()) ^ (toOnPlane < -VolumePoint.getE()))
             return null;
         Double coef = fromOnPlane / (fromOnPlane + toOnPlane);
-        if(coef > 1 + Point.getE())
+        if(coef > 1 + VolumePoint.getE())
             return null;
         Vector sizeVector = getVector().mul(coef);
         return new Line(this.getFrom(), sizeVector).getTo();
@@ -52,7 +52,7 @@ public class Line implements Comparable<Line> {
         return getFrom().equals(plane.getPlanedPoint(getFrom())) && getTo().equals(plane.getPlanedPoint(getTo()));
     }
 
-    public Point getTo() {
+    public VolumePoint getTo() {
         return this.getVector().fromPoint(this.getFrom());
     }
 

@@ -20,7 +20,7 @@ public class Vector {
         this.y = y;
         this.z = z;
     }
-    public Vector(Point from, Point to) {
+    public Vector(VolumePoint from, VolumePoint to) {
         this(to.getX() - from.getX(), to.getY() - from.getY(), to.getZ() - from.getZ());
     }
 
@@ -32,8 +32,8 @@ public class Vector {
         return new Vector(getX() * coef, getY() * coef, getZ() * coef);
     }
 
-    public Point fromPoint(Point point) {
-        return new Point(point.getX() + getX(), point.getY() + getY(), point.getZ() + getZ());
+    public VolumePoint fromPoint(VolumePoint volumePoint) {
+        return new VolumePoint(volumePoint.getX() + getX(), volumePoint.getY() + getY(), volumePoint.getZ() + getZ());
     }
     public double size() {
         return Math.sqrt(Math.pow(getX(), 2.) + Math.pow(getY(), 2.) + Math.pow(getZ(), 2.));

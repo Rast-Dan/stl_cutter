@@ -13,7 +13,8 @@ public class StlCutter {
             baseVector = plane.getRandomVector();
         }
         List<PlaneShape> result = solid.intersect(plane, baseVector);
-        ShapeDrawer drawer = new ShapeDrawer(result);
-        drawer.saveToFile(args.getImageFileName());
+        ShapeDrawer drawer = new ShapeDrawer(result, args.getStartPoint());
+//        drawer.saveToFile(args.getImageFileName());
+        drawer.showImage();
     }
 }

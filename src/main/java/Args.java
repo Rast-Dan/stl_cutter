@@ -1,7 +1,7 @@
 public class Args {
     private String stlFileName = "source.stl";
     private String imageFileName = "image.jpg";
-    private Point startPoint = new Point(0., 0., 0.);
+    private VolumePoint startVolumePoint = new VolumePoint(0., 0., 0.);
     private Vector normal = new Vector(1., 0., 0.);
     private Vector base;
     private String[] args;
@@ -15,8 +15,8 @@ public class Args {
         return imageFileName;
     }
 
-    public Point getStartPoint() {
-        return startPoint;
+    public VolumePoint getStartPoint() {
+        return startVolumePoint;
     }
 
     public Vector getNormal() {
@@ -57,7 +57,7 @@ public class Args {
                 case "--help" -> printHelp();
                 case "--stl_filename" -> this.stlFileName = getArg();
                 case "--image_filename" -> this.imageFileName = getArg();
-                case "--start_point" -> this.startPoint = new Point(getDouble(), getDouble(), getDouble());
+                case "--start_point" -> this.startVolumePoint = new VolumePoint(getDouble(), getDouble(), getDouble());
                 case "--normal" -> this.normal = new Vector(getDouble(), getDouble(), getDouble());
                 case "--base" -> this.base = new Vector(getDouble(), getDouble(), getDouble());
             }

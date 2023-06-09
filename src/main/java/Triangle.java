@@ -15,13 +15,13 @@ public class Triangle {
         this.lines = lines;
     }
     private static List<Line> getLinesFromStlTriangle(Stl.Triangle triangle) {
-        List<Point> points = new ArrayList<>();
+        List<VolumePoint> volumePoints = new ArrayList<>();
         for(Stl.Vec3d vec3d : triangle.vertices()) {
-            points.add(new Point(vec3d));
+            volumePoints.add(new VolumePoint(vec3d));
         }
         List<Line> lines = new ArrayList<>();
-        for(int i = 0; i < points.size(); i++) {
-            lines.add(new Line(points.get(i), points.get((i + 1) % points.size())));
+        for(int i = 0; i < volumePoints.size(); i++) {
+            lines.add(new Line(volumePoints.get(i), volumePoints.get((i + 1) % volumePoints.size())));
         }
         return lines;
     }
@@ -29,36 +29,36 @@ public class Triangle {
         this(getLinesFromStlTriangle(triangle));
     }
     public List<Line> intersect(Plane plane) {
-        Set<Point> points = new TreeSet<>();
+        Set<VolumePoint> volumePoints = new TreeSet<>();
         List<Line> lines = new ArrayList<>();
         for(Line line : getLines()) {
             if(line.isOnPlane(plane)) {
                 lines.add(line);
                 continue;
             }
-            Point intersection = line.intersect(plane);
+            VolumePoint intersection = line.intersect(plane);
             if(intersection == null)
                 continue;
-            points.add(intersection);
+            volumePoints.add(intersection);
         }
-        if(points.size() == 3) {
+        if(volumePoints.size() == 3) {
             for(Line line : getLines()) {
                 if(line.isOnPlane(plane)) {
                     lines.add(line);
                     continue;
                 }
-                Point intersection = line.intersect(plane);
+                VolumePoint intersection = line.intersect(plane);
                 if(intersection == null)
                     continue;
-                points.add(intersection);
+                volumePoints.add(intersection);
             }
             throw new RuntimeException("Некорректное количество точек перечения");
         }
-        List<Point> pointList = points.stream().toList();
-        if(points.size() == 1)
-            lines.add(new Line(pointList.get(0), pointList.get(0)));
-        if(points.size() == 2)
-            lines.add(new Line(pointList.get(0), pointList.get(1)));
+        List<VolumePoint> volumePointList = volumePoints.stream().toList();
+        if(volumePoints.size() == 1)
+            lines.add(new Line(volumePointList.get(0), volumePointList.get(0)));
+        if(volumePoints.size() == 2)
+            lines.add(new Line(volumePointList.get(0), volumePointList.get(1)));
         return lines;
     }
 }

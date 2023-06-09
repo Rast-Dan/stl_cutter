@@ -2,10 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaneShape {
-    public static class Point {
-        private Double x;
-        private Double y;
+    public static class PlanePoint {
+        private final Double x;
+        private final Double y;
 
+        private final VolumePoint original;
         public Double getX() {
             return x;
         }
@@ -13,35 +14,39 @@ public class PlaneShape {
         public Double getY() {
             return y;
         }
+        public VolumePoint getOriginal() {
+            return original;
+        }
 
-        public Point(Double x, Double y) {
+        public PlanePoint(Double x, Double y, VolumePoint original) {
             this.x = x;
             this.y = y;
+            this.original = original;
         }
-        public Point getNormalized(Double xMin, Double yMin, Double mul) {
-            return new Point((getX() - xMin) * mul, (getY() - yMin) * mul);
+        public PlanePoint getNormalized(Double xMin, Double yMin, Double mul) {
+            return new PlanePoint((getX() - xMin) * mul, (getY() - yMin) * mul, original);
         }
     }
     public static class Line {
-        Point from;
-        Point to;
+        PlanePoint from;
+        PlanePoint to;
 
-        public Point getFrom() {
+        public PlanePoint getFrom() {
             return from;
         }
 
-        public Point getTo() {
+        public PlanePoint getTo() {
             return to;
         }
 
-        public List<Point> getPoints() {
-            List<Point> res = new ArrayList<>();
+        public List<PlanePoint> getPoints() {
+            List<PlanePoint> res = new ArrayList<>();
             res.add(getFrom());
             res.add(getTo());
             return res;
         }
 
-        public Line(Point from, Point to) {
+        public Line(PlanePoint from, PlanePoint to) {
             this.from = from;
             this.to = to;
         }
@@ -59,8 +64,8 @@ public class PlaneShape {
     public PlaneShape getNormalized(Double minX, Double minY, Double mul) {
         List<Line> lines = new ArrayList<>();
         for(Line line : getLines()) {
-            Point newFrom = line.getFrom().getNormalized(minX, minY, mul);
-            Point newTo = line.getTo().getNormalized(minX, minY, mul);
+            PlanePoint newFrom = line.getFrom().getNormalized(minX, minY, mul);
+            PlanePoint newTo = line.getTo().getNormalized(minX, minY, mul);
             lines.add(new Line(newFrom, newTo));
         }
         return new PlaneShape(lines);
