@@ -108,38 +108,27 @@ public class ShapeDrawer {
     }
 
     private static void colorShapes(BufferedImage image) {
-        List<List<Boolean>> visited = new ArrayList<>();
         for(int i = 0; i < COUNT; i++) {
-            visited.add(new ArrayList<>());
-            for(int j = 0; j < COUNT; j++)
-                visited.get(i).add(false);
-        }
-        List<Pair> adds = new ArrayList<>();
-        adds.add(new Pair(-1, 0));
-        adds.add(new Pair(0, 1));
-        adds.add(new Pair(1, 0));
-        adds.add(new Pair(0, -1));
-        for(int i = 0; i < COUNT; i++)
-            for(int j = 0; j < COUNT; j++) {
-                if(visited.get(i).get(j))
-                    continue;
-                Queue<Pair> q = new LinkedList<>();
-                q.add(new Pair(i, j));
-                Color color = (i == 0 && j == 0) ? Color.WHITE : new Color((int)(Math.random() * 16777216));
-                while(!q.isEmpty()) {
-                    Pair curr = q.remove();
-                    for(Pair add : adds) {
-                        Pair nw = curr.add(add);
-                        if(Math.min(nw.getI(), nw.getJ()) < 0 || Math.max(nw.getI(), nw.getJ()) >= COUNT)
-                            continue;
-                        if(visited.get(nw.getI()).get(nw.getJ()) || image.getRGB(nw.getI(), nw.getJ()) == Color.black.getRGB())
-                            continue;
-                        image.setRGB(nw.getI(), nw.getJ(), color.getRGB());
-                        visited.get(nw.getI()).set(nw.getJ(), true);
-                        q.add(nw);
-                    }
+            boolean isWhite = true;
+            for (int up = 0, down = COUNT - 1; up <= down;) {
+                Color current = isWhite ? Color.WHITE : Color.GRAY;
+                if (image.getRGB(i, up) != Color.BLACK.getRGB()) {
+                    image.setRGB(i, up, current.getRGB());
+                    up++;
+                }
+                else if (image.getRGB(i, down) != Color.BLACK.getRGB()) {
+                    image.setRGB(i, down, current.getRGB());
+                    down--;
+                }
+                else {
+                    isWhite = !isWhite;
+                    while (image.getRGB(i, up) == Color.BLACK.getRGB())
+                        up++;
+                    while (image.getRGB(i, down) == Color.BLACK.getRGB())
+                        down--;
                 }
             }
+        }
     }
     private void toFile(PlaneShape planeShape) {
         try {
@@ -152,10 +141,10 @@ public class ShapeDrawer {
         }
     }
     private BufferedImage toBufferedImage() {
-        BufferedImage image = new BufferedImage(MAX + 2 * OFFSET, MAX + 2 * OFFSET, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(COUNT, COUNT, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();  // not sure on this line, but this seems more right
         g.setColor(Color.white);
-        g.fillRect(0, 0, MAX + 2 * OFFSET, MAX + 2 * OFFSET); // give the whole image a white background
+        g.fillRect(0, 0, COUNT, COUNT); // give the whole image a white background
         Double maxX = null;
         Double minX = null;
         Double maxY = null;
